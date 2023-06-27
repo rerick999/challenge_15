@@ -15,31 +15,7 @@ function init(){
 	}).addTo(myMap);
 	
 	add_markers(myMap);
-	
-
-/*
-	let url="https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/significant_month.geojson";
-	d3.json(url).then(function (data) {
-		console.log(data);
-		alert(data.features.length);
-		for (let i=0;i<data.features.length;i++){
-			console.log(data.features[i]);
-		}
-		//createFeatures(data.features);
-	});
-*/	
-	
-	
-	
-	/*
-	let pth="data/significant_month.geojson";
-	d3.json(pth).then(function (data) {
-		for (let i=0;i<data.length;i++){
-			console.log(data[i]);
-		}
-		//createFeatures(data.features);
-	});
-	*/
+	add_legend(myMap);
 }
 
 function normalize(val, max, min) { 
@@ -101,12 +77,38 @@ function add_markers(myMap){
 	});	
 }
 
-
-
-
-
-
-
-
+function add_legend(myMap){
+	var legend = L.control({position: 'topright'});
+	legend.onAdd = function (myMap) {
+		var div = L.DomUtil.create('div', 'info legend');
+		labels = ['<strong>DEPTH IN KILOMETERS</strong>'];
+		labels.push('<ul style="display:inline-block; width: 40px;">');
+		labels.push('<li style="background: lawngreen;"> &lt;10 </li>');
+		labels.push('<li style="background: greenyellow;"> 10-30 </li>');
+		labels.push('<li style="background: gold;"> 30-50 </li>');
+		labels.push('<li style="background: orange;"> 50-70 </li>');
+		labels.push('<li style="background: orangered;"> 70-90 </li>');
+		labels.push('<li style="background: red;"> &gt;90 </li>');
+		/*
+		categories = [10,30,50,70,90,100];
+		for (var i = 0; i < categories.length; i++) {
+				let di=depth_info(categories[i]-1);
+				labels.push('<li style="background:'+di[0]+';>'+di[1]+'</li>');
+				//div.innerHTML +=
+				//let newhtml='<i class="circle" style="background:' + di[1] + '"></i> ';
+				//alert(newhtml);
+				//labels.push(
+				//	'<i class="circle" style="background:' + di[1] + '"></i> ');
+				//labels.push(
+				//	'<i class="circle" style="background:' + di[1] + '"></i> ' +
+				//(categories[i] ? categories[i] : '+'));
+			}
+		*/
+		labels.push('</ul>');
+		div.innerHTML = labels.join('<br>');
+		return div;
+	};
+	legend.addTo(myMap);
+}
 
 init();
