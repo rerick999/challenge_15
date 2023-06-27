@@ -50,6 +50,22 @@ function normalize(val, max, min) {
 	return res;
 }
 
+function depth_info(depth){
+	if(depth<10)
+		return ["lawngreen","<10"];
+	else if(depth<30)
+		return ["greenyellow","10-30"];
+	else if(depth<50)
+		return ["gold","30-50"];
+	else if(depth<70)
+		return ["orange","50-70"];
+	else if(depth<90)
+		return ["orangered","70-90"];
+	else {
+		return ["red",">90"];
+	}
+}
+
 function add_markers(myMap){
 	//alert('adding markers');
 	//let url="https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/significant_month.geojson";
@@ -63,20 +79,22 @@ function add_markers(myMap){
 			let lon=coords[0];
 			let lat=coords[1];
 			let depth=coords[2];
-			depth="#" + normalize(depth,16777215,0);
+			//depth="#" + normalize(depth,16777215,0);
+			let depth2=depth_info(depth)[0];
 			let properties=data.features[i].properties;
 			let mag=properties.mag;
-			mag=mag**7;
-			//alert(mag);
-			
+			let mag2=mag**7;
+			let place=properties.place;
+			tooltip="location: "+place;
+			tooltip=tooltip+"\nmagnitude: "+mag;
+			tooltip=tooltip+"\ndepth: "+depth;
+			tooltip=tooltip+"\nlongitude: "+lon+" latitude: "+lat;
 			var circle = L.circle([lat,lon], {
-				color: depth,
+				color: depth2,
 				stroke: false,
-				//fillColor: depth,
-				//fillColor: depth,
 				fillOpacity: 0.5,
-				radius: mag,
-			}).addTo(myMap);
+				radius: mag2,
+			}).bindTooltip(tooltip).addTo(myMap);
 			
 		}
 		//createFeatures(data.features);
